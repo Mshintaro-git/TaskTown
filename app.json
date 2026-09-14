@@ -1,0 +1,46 @@
+{
+  "expo": {
+    "name": "Task Town",
+    "slug": "DailyTownRPG",
+    "version": "1.0.0",
+    "scheme": "dailytownrpg",
+    "orientation": "portrait",
+    "icon": "./assets/ToDo5-removebg-preview.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0f0f23"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.shintaro.todotown",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-sqlite",
+      "expo-localization"
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "4d6976db-8379-4a1d-b289-af5c67a9dc79"
+      }
+    }
+  }
+}
