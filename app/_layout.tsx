@@ -1,6 +1,7 @@
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { View, ActivityIndicator } from "react-native";
+import { View, ActivityIndicator, Platform } from "react-native";
+import { useEffect } from "react";
 import { useFonts, Fredoka_600SemiBold, Fredoka_700Bold } from "@expo-google-fonts/fredoka";
 import {
   Nunito_400Regular,
@@ -8,6 +9,7 @@ import {
   Nunito_700Bold,
   Nunito_800ExtraBold,
 } from "@expo-google-fonts/nunito";
+import Purchases from "react-native-purchases";
 import { colors } from "../src/theme/theme";
 
 export default function RootLayout() {
@@ -19,6 +21,14 @@ export default function RootLayout() {
     Nunito_700Bold,
     Nunito_800ExtraBold,
   });
+
+  useEffect(() => {
+    if (Platform.OS === "ios") {
+      Purchases.configure({
+        apiKey: process.env.EXPO_PUBLIC_REVENUECAT_IOS_API_KEY!,
+      });
+    }
+  }, []);
 
   if (!fontsLoaded) {
     return (

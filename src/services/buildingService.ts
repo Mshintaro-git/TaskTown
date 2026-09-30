@@ -2,7 +2,12 @@
 // 建物取得・未建築判定・候補抽選・建築・保存・一覧取得
 
 import { Platform } from "react-native";
-import { BUILDINGS, LevelBuildingChoices, getBuildingById, BuildingMaster } from "../constants/buildings";
+import {
+  BUILDINGS,
+  LevelBuildingChoices,
+  getBuildingById,
+  BuildingMaster,
+} from "../constants/buildings";
 import { getDb } from "../database";
 
 // プレイヤーの建物
@@ -46,7 +51,9 @@ export async function getBuiltBuildings(): Promise<PlayerBuilding[]> {
     building_id: string;
     slot_number: number;
     built_at: string;
-  }>("SELECT id, building_id, slot_number, built_at FROM buildings ORDER BY slot_number");
+  }>(
+    "SELECT id, building_id, slot_number, built_at FROM buildings ORDER BY slot_number"
+  );
 
   return rows.map((row) => ({
     id: row.id,
@@ -60,6 +67,7 @@ export async function getBuiltBuildings(): Promise<PlayerBuilding[]> {
 export async function getUnbuiltBuildings(): Promise<BuildingMaster[]> {
   const built = await getBuiltBuildings();
   const builtIds = new Set(built.map((b) => b.buildingId));
+
   return BUILDINGS.filter((b) => !builtIds.has(b.id));
 }
 
@@ -78,7 +86,9 @@ export async function getNextAvailableSlot(): Promise<number> {
 }
 
 // 建物候補を取得（レベルごとに固定の3択）
-export async function getBuildingCandidates(currentLevel: number = 1): Promise<BuildingCandidate[]> {
+export async function getBuildingCandidates(
+  currentLevel: number = 1
+): Promise<BuildingCandidate[]> {
   const built = await getBuiltBuildings();
   const builtIds = new Set(built.map((b) => b.buildingId));
 
@@ -106,8 +116,13 @@ export async function getBuildingCandidates(currentLevel: number = 1): Promise<B
 }
 
 // 建物を建築
-export async function buildBuilding(buildingId: string): Promise<PlayerBuilding | null> {
+// 既存のレベルアップ建築などで使用
+// 空いている最小スロットに自動で配置する
+export async function buildBuilding(
+  buildingId: string
+): Promise<PlayerBuilding | null> {
   const slot = await getNextAvailableSlot();
+
   if (slot === -1) {
     return null; // スロット満杯
   }
@@ -121,12 +136,17 @@ export async function buildBuilding(buildingId: string): Promise<PlayerBuilding 
       slotNumber: slot,
       builtAt: now,
     };
+
     webBuildings.push(newBuilding);
+
     return newBuilding;
   }
 
   const db = getDb();
-  if (!db) return null;
+
+  if (!db) {
+    return null;
+  }
 
   const result = await db.runAsync(
     "INSERT INTO buildings (building_id, slot_number, built_at, created_at, updated_at) VALUES (?, ?, ?, ?, ?)",
@@ -141,6 +161,75 @@ export async function buildBuilding(buildingId: string): Promise<PlayerBuilding 
     id: result.lastInsertRowId as number,
     buildingId,
     slotNumber: slot,
+    builtAt: now,
+  };
+}
+
+// 指定したスロットに建物を建築
+// Premiumユーザーの空き地への自由配置などで使用
+export async function buildBuildingAtSlot(
+  buildingId: string,
+  slotNumber: number
+): Promise<PlayerBuilding | null> {
+  // スロット番号が有効か確認
+  if (slotNumber < 1 || slotNumber > 10) {
+    return null;
+  }
+
+  // 建物が存在するか確認
+  const building = getBuildingById(buildingId);
+
+  if (!building) {
+    return null;
+  }
+
+  // すでにそのスロットに建物があるか確認
+  const built = await getBuiltBuildings();
+
+  const slotOccupied = built.some(
+    (building) => building.slotNumber === slotNumber
+  );
+
+  if (slotOccupied) {
+    return null;
+  }
+
+  const now = new Date().toISOString();
+
+  // Web
+  if (Platform.OS === "web") {
+    const newBuilding: PlayerBuilding = {
+      id: webBuildings.length + 1,
+      buildingId,
+      slotNumber,
+      builtAt: now,
+    };
+
+    webBuildings.push(newBuilding);
+
+    return newBuilding;
+  }
+
+  // iOS / Android
+  const db = getDb();
+
+  if (!db) {
+    return null;
+  }
+
+  const result = await db.runAsync(
+    "INSERT INTO buildings (building_id, slot_number, built_at, created_at, updated_at) VALUES (?, ?, ?, ?, ?)",
+    buildingId,
+    slotNumber,
+    now,
+    now,
+    now
+  );
+
+  return {
+    id: result.lastInsertRowId as number,
+    buildingId,
+    slotNumber,
     builtAt: now,
   };
 }

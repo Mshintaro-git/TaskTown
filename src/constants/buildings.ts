@@ -24,8 +24,10 @@ export type BuildingMaster = {
   premium: boolean;
 };
 
-// 建物マスターデータ（10種類）
+// 建物マスターデータ
 export const BUILDINGS: BuildingMaster[] = [
+  // ─── Free Buildings ──────────────────────────────────────────────────────
+
   {
     id: "tent",
     nameJa: "テント",
@@ -39,6 +41,7 @@ export const BUILDINGS: BuildingMaster[] = [
     rarity: "COMMON",
     premium: false,
   },
+
   {
     id: "tree",
     nameJa: "木",
@@ -52,6 +55,7 @@ export const BUILDINGS: BuildingMaster[] = [
     rarity: "COMMON",
     premium: false,
   },
+
   {
     id: "flower_field",
     nameJa: "花畑",
@@ -65,6 +69,7 @@ export const BUILDINGS: BuildingMaster[] = [
     rarity: "COMMON",
     premium: false,
   },
+
   {
     id: "farm",
     nameJa: "畑",
@@ -78,6 +83,7 @@ export const BUILDINGS: BuildingMaster[] = [
     rarity: "COMMON",
     premium: false,
   },
+
   {
     id: "small_house",
     nameJa: "小さな家",
@@ -91,6 +97,7 @@ export const BUILDINGS: BuildingMaster[] = [
     rarity: "COMMON",
     premium: false,
   },
+
   {
     id: "bakery",
     nameJa: "パン屋",
@@ -104,6 +111,7 @@ export const BUILDINGS: BuildingMaster[] = [
     rarity: "COMMON",
     premium: false,
   },
+
   {
     id: "park",
     nameJa: "公園",
@@ -117,6 +125,7 @@ export const BUILDINGS: BuildingMaster[] = [
     rarity: "COMMON",
     premium: false,
   },
+
   {
     id: "library",
     nameJa: "図書館",
@@ -130,6 +139,7 @@ export const BUILDINGS: BuildingMaster[] = [
     rarity: "COMMON",
     premium: false,
   },
+
   {
     id: "plaza",
     nameJa: "広場",
@@ -143,6 +153,7 @@ export const BUILDINGS: BuildingMaster[] = [
     rarity: "COMMON",
     premium: false,
   },
+
   {
     id: "clock_tower",
     nameJa: "時計塔",
@@ -155,6 +166,50 @@ export const BUILDINGS: BuildingMaster[] = [
     category: "landmark",
     rarity: "COMMON",
     premium: false,
+  },
+
+  // ─── Premium Buildings ───────────────────────────────────────────────────
+
+  {
+    id: "cafe",
+    nameJa: "カフェ",
+    nameEn: "Cafe",
+    descriptionJa: "街角でひと息つける憩いの場",
+    descriptionEn: "A cozy place to relax with a cup of coffee",
+    unlockLevel: 1,
+    icon: "☕",
+    image: null,
+    category: "commercial",
+    rarity: "RARE",
+    premium: true,
+  },
+
+  {
+    id: "onsen",
+    nameJa: "温泉",
+    nameEn: "Hot Spring",
+    descriptionJa: "ゆったり癒やされる小さな温泉",
+    descriptionEn: "A small hot spring for peaceful relaxation",
+    unlockLevel: 1,
+    icon: "♨️",
+    image: null,
+    category: "culture",
+    rarity: "RARE",
+    premium: true,
+  },
+
+  {
+    id: "observatory",
+    nameJa: "天文台",
+    nameEn: "Observatory",
+    descriptionJa: "星空を眺める静かな天文台",
+    descriptionEn: "A quiet observatory for gazing at the stars",
+    unlockLevel: 1,
+    icon: "🔭",
+    image: null,
+    category: "landmark",
+    rarity: "EPIC",
+    premium: true,
   },
 ];
 
@@ -170,6 +225,7 @@ export function getAllBuildings(): BuildingMaster[] {
 
 // レベル別建物選択肢
 // 各レベルで3つの建物候補を固定で定義
+// ※ Premium建物はここには追加しない
 export const LevelBuildingChoices: Record<number, string[]> = {
   1: [], // Lv1は建物なし
   2: ["tent", "tree", "flower_field"],
@@ -181,4 +237,4 @@ export const LevelBuildingChoices: Record<number, string[]> = {
   8: ["clock_tower", "library", "plaza"],
   9: [], // 後日追加予定
   10: [], // 後日追加予定
-}
+};

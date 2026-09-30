@@ -2,7 +2,7 @@
   "expo": {
     "name": "Task Town",
     "slug": "DailyTownRPG",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "scheme": "dailytownrpg",
     "orientation": "portrait",
     "icon": "./assets/ToDo5-removebg-preview.png",
@@ -26,7 +26,8 @@
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.shintaro.todotown"
     },
     "web": {
       "favicon": "./assets/favicon.png"
